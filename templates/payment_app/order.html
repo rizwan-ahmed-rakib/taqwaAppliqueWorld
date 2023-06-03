@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block body_block %}
+    <div class="container mt-5">
+        <h2 class="text-center"><strong>Your Order</strong></h2>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card mt-5" style="height: auto">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Order Id</th>
+                                <th scope="col">Products</th>
+                                <th scope="col">Status</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for order in orders %}
+                                <tr>
+                                    <th scope="row">{{ forloop.counter }}</th>
+                                    <th><a href="#">{{ order.orderId }}</a></th>
+                                    <td>
+                                        {% for item in order.orderitems.all %} {{ item }} <br> {% endfor %}
+                                    </td>
+                                    <td><span class="badge bg-success">Processing Your Order</span></td>
+{#                                    <td><span class="badge badge-primary">Processing Your Order</span></td>#}
+                                </tr>
+                            {% endfor %}
+                            {#                                <tr>#}
+                            {#                                    <td>1</td>#}
+                            {#                                    <td>order number</td>#}
+                            {#                                    <td>products u</td>#}
+                            {#                                    <td>pending</td>#}
+                            {#                                </tr>#}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 my-5 text-center">
+                <a href="{% url 'Shop_App:home' %}">Back to Home</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
