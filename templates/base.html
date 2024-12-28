@@ -1,0 +1,104 @@
+{% load  static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.o">
+
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    {#    <link rel="stylesheet" href=" https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">#}
+    {#    <link href=" https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.1/css/fontawesome.min.css">#}
+    <link href=" https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css " rel="stylesheet">
+    <script src=" https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js "></script>
+    <script src="{% static 'fontawesomefree/js/all.min.js' %}"></script>
+
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <title>{% block title_block %} E-com | Rizwan {% endblock %} </title>
+    <style>
+        .card {
+            height: 350px;
+
+
+        }
+
+        .card-product:after {
+            content: "";
+            display: table;
+            clear: both;
+            visibility: hidden;
+        }
+
+        .card-product .price-new, .card-product .price {
+            margin-right: 5px;
+
+        }
+
+        .card-product .price-old {
+            color: #999;
+        }
+
+        .card-product .img-wrap {
+            border-radius: 3px 3px 0 0;
+            overflow: hidden;
+            position: relative;
+            height:300px;
+            text-align: center;
+        }
+
+        .card-product .img-wrap img {
+            max-height: 100%;
+            max-width: 100%;
+            object-fit: cover;
+        }
+
+
+        .card-product .info-wrap {
+            overflow: hidden;
+            padding: 15px;
+            border-top: 1px solid black;
+        }
+
+        .card-product .action-wrap {
+            padding-top: 4px;
+            margin-top: 4px;
+        }
+
+        .card-product .bottom-wrap {
+            padding: 15px;
+            border-top: solid #eee;
+        }
+
+        .card-product .title {
+            margin-top: 0px;
+        }
+    </style>
+</head>
+<body>
+
+{% include 'navbar.html' %}
+
+<div class="container">
+    <div class="messages container mt-2"> <!--for show message in templates-->
+
+        {% if messages %}
+            {% for message in messages %}
+                <div {% if message.tags %} class="alert alert-{{ message.tags }}{% endif %}"
+                        role="alert">
+                    {{ message }}
+                    <button style="float: right;color: red" type="button" class="close" data-dismiss="alert"
+                            aria-label="close"><span aria-hidden="true">&times;</span></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+    {% block body_block %}
+        WELCOME
+    {% endblock %}
+
+</div>
+<script src=" https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.slim.min.js"></script>
+<script src=" https://code.jquery.com/jquery-3.7.0.slim.min.js"
+        integrity="sha256-tG5mcZUtJsZvyKAxYLVXrmjKBVLd6VpVccqz/r4ypFE=" crossorigin="anonymous"></script>
+<script src=" https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
