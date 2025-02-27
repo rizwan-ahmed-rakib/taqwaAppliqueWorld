@@ -1,55 +1,110 @@
+<style>
+    #suggestion-list {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        background-color: white;
+        border: 1px solid #ddd;
+        max-height: 200px;
+        overflow-y: auto;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .list-group-item {
+        padding: 8px 12px;
+        cursor: pointer;
+    }
+
+    .list-group-item:hover {
+        background-color: #f8f9fa;
+    }
+
+    .navbar {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 1000;
+    }
+
+    /* Prevent content overlap */
+    body {
+        padding-top: 100px; /* Navbar er height adjust */
+    }
+</style>
+
 {% load cart_tag %}
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-light bg-dark " >
     <div class="container">
-        <a class="navbar-brand" href="{% url 'Shop_App:home' %}">E-shop</a>
-        {#        <button type="button" class="navbar-toggler" data-toggle="#}
-        {#                collapse" data-target="#navbarNav" aria-controls="navbarNav"#}
-        {#                aria-expanded="false" aria-label="Toggle navigation">#}
-        {#            <span class="navbar-toggler-icon"> </span>#}
-        {#        </button>#}
-        {#        <div class="collapse navbar-collapse" id="navbarNav">#}
-        <button
-                class="navbar-toggler"
-                type="button"
-                data-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent"
-                aria-expanded="false"
-                aria-label="Toggle navigation"
-        >
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div
-                class="collapse navbar-collapse  "
-                id="navbarSupportedContent"
-        >
+        <!-- Logo -->
+        <a class="navbar-brand glyphicon-text-color" style="color:orange" href="{% url 'Shop_App:home' %}">E-shop</a>
 
 
-            <ul class="navbar-nav ml-auto">
+        <form class="d-flex" action="{% url 'Shop_App:search_products' %}" method="get">
+            <input
+                    class="form-control me-2"
+                    id="search-input"
+                    type="search"
+                    name="q"
+                    placeholder="Search products..."
+                    aria-label="Search"
+            >
+            <ul id="suggestion-list" class="list-group"></ul> <!-- Suggestion gulo ekhane dekhabe -->
+            <button class="btn btn-outline-success" id="search-button" type="submit">Search</button>
+        </form>
+
+
+
+
+        <!-- Navbar Links -->
+        <div class="d-flex flex-wrap justify-content-end w-100">
+            <ul class="navbar-nav flex-row flex-wrap ms-auto">
                 {% if request.user.is_authenticated %}
-                    <li class="nav-item"><a class="nav-link" href="#">coffee</a></li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'Order_App:cart' %}">
-                            <i class="fa fa-shopping-cart"></i>Cart
+                    <!-- Coffee -->
+                    <li class="nav-item px-2">
+                        <a class="nav-link" style="color:white" href="{% url 'Shop_App:category_list' %}"><i class="fa fa-dharmachakra" style="color: red"></i>Categories</a>
+                    </li>
+                    <li class="nav-item px-2">
+                        <a class="nav-link" style="color:white" href="{% url 'Shop_App:product_list' %}"> <i class="fa fa-filter" style="color: orange"></i>Filter</a>
+                    </li>
+
+                    <!-- Cart -->
+                    <li class="nav-item px-2">
+                        <a class="nav-link" style="color:white" href="{% url 'Order_App:cart' %}">
+                            <i class="fa fa-shopping-cart" style="color: #27ae60"></i> Cart
                             <span class="badge badge-light" style="color: green">{{ request.user | cart_total }}</span>
                         </a>
                     </li>
 
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-user-tie"></i>
-                            {{ request.user.profile.username }}
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="{% url 'Login_App:profile' %}">Profile</a>
-                            <a class="dropdown-item" href="{% url 'Payment_App:orders' %}">Orders</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="{% url 'Login_App:logout' %}">Logout</a>
+                    <!-- User Dropdown -->
+                    <li class="nav-item dropdown px-2" >
+                        <a
+                                class="nav-link dropdown-toggle"
+                                href="#"
+                                id="userDropdown"
+                                role="button"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false"
+                                style="color:cyan"
 
-                        </div>
+                        >
+                            <i class="fas fa-user-tie" style="color:cyan"></i> {{ request.user.profile.username }}
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="userDropdown" style="color:green">
+                            <li><a class="dropdown-item"   href="{% url 'Login_App:profile' %}">Profile</a></li>
+                            <li><a class="dropdown-item"  href="{% url 'Payment_App:orders' %}">Orders</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="{% url 'Login_App:logout' %}">Logout</a></li>
+                        </ul>
                     </li>
                 {% else %}
-                    <li class="nav-item">
+                    <!-- Login -->
+                    <li class="nav-item px-2">
                         <a href="{% url 'Login_App:login' %}" class="btn btn-primary">Login</a>
                     </li>
                 {% endif %}
@@ -57,3 +112,372 @@
         </div>
     </div>
 </nav>
+
+<script>
+    document.getElementById('search-input').addEventListener('input', function () {
+        let query = this.value; // User input paoa
+        let suggestionList = document.getElementById('suggestion-list'); // Suggestion list er ID
+        suggestionList.innerHTML = ''; // Purono suggestions clear kora
+
+        if (query.length > 1) { // Minimum 2 character type korle suggestion show korbe
+            fetch(`/product-suggestions/?term=${query}`) // Django URL e GET request pathano
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach(item => {
+                        let li = document.createElement('li');
+                        li.textContent = item.name; // Product name set kora
+                        li.className = 'list-group-item';
+
+                        // Suggestion click korar functionality
+                        li.addEventListener('click', function () {
+                            document.getElementById('search-input').value = item.name; // Input field e set
+                            suggestionList.innerHTML = ''; // List clear
+                        });
+
+                        suggestionList.appendChild(li); // List e item add
+                    });
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    });
+
+    // Enter key press korar event listener
+    document.getElementById('search-input').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') { // Check if the pressed key is 'Enter'
+            window.location.href = `/search/?q=${this.value}`; // Redirect to search URL
+        }
+    });
+
+    // Search Button এ ক্লিক ইভেন্ট হ্যান্ডল করা
+    document.getElementById('search-button').addEventListener('click', function () {
+        const query = document.getElementById('search-input').value; // Search Field এর ভ্যালু নেওয়া
+        if (query.trim() !== '') { // যদি ফাঁকা না হয়
+            window.location.href = `/search/?q=${query}`; // URL এ রিডিরেক্ট
+        } else {
+            alert('Please enter a product name!'); // ফাঁকা থাকলে সতর্কবার্তা
+        }
+    });
+
+
+</script>
+
+
+
+<!-- not fixed with toggler -->
+{#{% load cart_tag %}#}
+{#<style>#}
+{#    #suggestion-list {#}
+{#        position: absolute;#}
+{#        top: 100%;#}
+{#        left: 0;#}
+{#        right: 0;#}
+{#        z-index: 1000;#}
+{#        background-color: white;#}
+{#        border: 1px solid #ddd;#}
+{#        max-height: 200px;#}
+{#        overflow-y: auto;#}
+{#        list-style: none;#}
+{#        padding: 0;#}
+{#        margin: 0;#}
+{#    }#}
+{##}
+{#    .list-group-item {#}
+{#        padding: 8px 12px;#}
+{#        cursor: pointer;#}
+{#    }#}
+{##}
+{#    .list-group-item:hover {#}
+{#        background-color: #f8f9fa;#}
+{#    }#}
+{##}
+{#    .navbar {#}
+{#        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Smooth shadow effect */#}
+{#    }#}
+{##}
+{#    .navbar-toggler {#}
+{#        border: none; /* Remove default border */#}
+{#        outline: none;#}
+{#    }#}
+{##}
+{#    .navbar-toggler:focus {#}
+{#        box-shadow: none; /* Remove focus shadow */#}
+{#    }#}
+{##}
+{#    .navbar-nav .nav-item {#}
+{#        padding: 5px 10px;#}
+{#    }#}
+{#</style>#}
+{##}
+{#<nav class="navbar navbar-expand-lg navbar-dark bg-dark ">#}
+{#    <div class="container">#}
+{#        <!-- Logo -->#}
+{#        <a class="navbar-brand text-warning" href="{% url 'Shop_App:home' %}">E-shop</a>#}
+{##}
+{#        <!-- Toggle button for small screens -->#}
+{#        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"#}
+{#                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">#}
+{#            <span class="navbar-toggler-icon"></span>#}
+{#        </button>#}
+{##}
+{#        <!-- Navbar Content -->#}
+{#        <div class="collapse navbar-collapse" id="navbarNav">#}
+{#            <ul class="navbar-nav ms-auto">#}
+{#                {% if request.user.is_authenticated %}#}
+{#                    <li class="nav-item">#}
+{#                        <a class="nav-link text-white" href="{% url 'Shop_App:category_list' %}">#}
+{#                            <i class="fa fa-dharmachakra text-danger"></i> Categories#}
+{#                        </a>#}
+{#                    </li>#}
+{#                    <li class="nav-item">#}
+{#                        <a class="nav-link text-white" href="{% url 'Shop_App:product_list' %}">#}
+{#                            <i class="fa fa-filter text-warning"></i> Filter#}
+{#                        </a>#}
+{#                    </li>#}
+{#                    <li class="nav-item">#}
+{#                        <a class="nav-link text-white" href="{% url 'Order_App:cart' %}">#}
+{#                            <i class="fa fa-shopping-cart text-success"></i> Cart#}
+{#                            <span class="badge bg-success">{{ request.user | cart_total }}</span>#}
+{#                        </a>#}
+{#                    </li>#}
+{##}
+{#                    <!-- User Dropdown -->#}
+{#                    <li class="nav-item dropdown">#}
+{#                        <a class="nav-link dropdown-toggle text-info" href="#" id="userDropdown" role="button"#}
+{#                           data-bs-toggle="dropdown" aria-expanded="false">#}
+{#                            <i class="fas fa-user-tie"></i> {{ request.user.profile.username }}#}
+{#                        </a>#}
+{#                        <ul class="dropdown-menu">#}
+{#                            <li><a class="dropdown-item" href="{% url 'Login_App:profile' %}">Profile</a></li>#}
+{#                            <li><a class="dropdown-item" href="{% url 'Payment_App:orders' %}">Orders</a></li>#}
+{#                            <li>#}
+{#                                <hr class="dropdown-divider">#}
+{#                            </li>#}
+{#                            <li><a class="dropdown-item" href="{% url 'Login_App:logout' %}">Logout</a></li>#}
+{#                        </ul>#}
+{#                    </li>#}
+{#                {% else %}#}
+{#                    <li class="nav-item">#}
+{#                        <a href="{% url 'Login_App:login' %}" class="btn btn-primary">Login</a>#}
+{#                    </li>#}
+{#                {% endif %}#}
+{#            </ul>#}
+{##}
+{#            <!-- Search Box -->#}
+{#            <form class="d-flex mt-2 mt-lg-0 w-100 w-lg-auto" action="{% url 'Shop_App:search_products' %}"#}
+{#                  method="get">#}
+{#                <input class="form-control me-2" id="search-input" type="search" name="q"#}
+{#                       placeholder="Search products..." aria-label="Search">#}
+{#                <ul id="suggestion-list" class="list-group"></ul>#}
+{#                <button class="btn btn-outline-success" id="search-button" type="submit">Search</button>#}
+{#            </form>#}
+{##}
+{#        </div>#}
+{#    </div>#}
+{#</nav>#}
+{##}
+{#<script>#}
+{#    document.getElementById('search-input').addEventListener('input', function () {#}
+{#        let query = this.value;#}
+{#        let suggestionList = document.getElementById('suggestion-list');#}
+{#        suggestionList.innerHTML = '';#}
+{##}
+{#        if (query.length > 1) {#}
+{#            fetch(`/product-suggestions/?term=${query}`)#}
+{#                .then(response => response.json())#}
+{#                .then(data => {#}
+{#                    data.forEach(item => {#}
+{#                        let li = document.createElement('li');#}
+{#                        li.textContent = item.name;#}
+{#                        li.className = 'list-group-item';#}
+{##}
+{#                        li.addEventListener('click', function () {#}
+{#                            document.getElementById('search-input').value = item.name;#}
+{#                            suggestionList.innerHTML = '';#}
+{#                        });#}
+{##}
+{#                        suggestionList.appendChild(li);#}
+{#                    });#}
+{#                })#}
+{#                .catch(error => console.error('Error:', error));#}
+{#        }#}
+{#    });#}
+{##}
+{#    document.getElementById('search-input').addEventListener('keypress', function (e) {#}
+{#        if (e.key === 'Enter') {#}
+{#            window.location.href = `/search/?q=${this.value}`;#}
+{#        }#}
+{#    });#}
+{##}
+{#    document.getElementById('search-button').addEventListener('click', function () {#}
+{#        const query = document.getElementById('search-input').value;#}
+{#        if (query.trim() !== '') {#}
+{#            window.location.href = `/search/?q=${query}`;#}
+{#        } else {#}
+{#            alert('Please enter a product name!');#}
+{#        }#}
+{#    });#}
+{#</script>#}
+
+
+<!-- Fiexed Nav Bar with toggler for small screen and long for larze device -->
+{##}
+{#{% load cart_tag %}#}
+{#<style>#}
+{#    /* Fixed Navbar */#}
+{#    .navbar {#}
+{#        position: fixed;#}
+{#        top: 0;#}
+{#        width: 100%;#}
+{#        z-index: 1000;#}
+{#    }#}
+{##}
+{#    /* Prevent content overlap */#}
+{#    body {#}
+{#        padding-top: 70px; /* Navbar er height adjust */#}
+{#    }#}
+{##}
+{#    /* Search Suggestions */#}
+{#    #suggestion-list {#}
+{#        position: absolute;#}
+{#        top: 100%;#}
+{#        left: 0;#}
+{#        right: 0;#}
+{#        z-index: 1000;#}
+{#        background-color: white;#}
+{#        border: 1px solid #ddd;#}
+{#        max-height: 200px;#}
+{#        overflow-y: auto;#}
+{#        list-style: none;#}
+{#        padding: 0;#}
+{#        margin: 0;#}
+{#    }#}
+{##}
+{#    .list-group-item {#}
+{#        padding: 8px 12px;#}
+{#        cursor: pointer;#}
+{#    }#}
+{##}
+{#    .list-group-item:hover {#}
+{#        background-color: #f8f9fa;#}
+{#    }#}
+{#</style>#}
+{##}
+{#<nav class="navbar navbar-expand-lg navbar-dark bg-dark">#}
+{#    <div class="container">#}
+{#        <!-- Logo -->#}
+{#        <a class="navbar-brand" style="color:orange" href="{% url 'Shop_App:home' %}">E-shop</a>#}
+{##}
+{#        <!-- Toggle Button for Small Screens -->#}
+{#        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">#}
+{#            <span class="navbar-toggler-icon"></span>#}
+{#        </button>#}
+{##}
+{#        <!-- Navbar Items -->#}
+{#        <div class="collapse navbar-collapse" id="navbarNav">#}
+{#            <!-- Navbar Links -->#}
+{#            <ul class="navbar-nav ms-auto">#}
+{##}
+{#                <li class="nav-item">#}
+{#                    <a class="nav-link text-white" href="{% url 'Shop_App:category_list' %}">#}
+{#                        <i class="fa fa-dharmachakra" style="color: red"></i> Categories#}
+{#                    </a>#}
+{#                </li>#}
+{#                <li class="nav-item">#}
+{#                    <a class="nav-link text-white" href="{% url 'Shop_App:product_list' %}">#}
+{#                        <i class="fa fa-filter" style="color: orange"></i> Filter#}
+{#                    </a>#}
+{#                </li>#}
+{#                {% if request.user.is_authenticated %}#}
+{##}
+{#                    <li class="nav-item">#}
+{#                        <a class="nav-link text-white" href="{% url 'Order_App:cart' %}">#}
+{#                            <i class="fa fa-shopping-cart" style="color: #27ae60"></i> Cart#}
+{#                            <span class="badge bg-success">{{ request.user | cart_total }}</span>#}
+{#                        </a>#}
+{#                    </li>#}
+{##}
+{#                    <!-- User Dropdown -->#}
+{#                    <li class="nav-item dropdown">#}
+{#                        <a class="nav-link dropdown-toggle text-cyan" href="#" id="userDropdown" role="button"#}
+{#                           data-bs-toggle="dropdown">#}
+{#                            <i class="fas fa-user-tie" style="color:cyan"></i> {{ request.user.profile.username }}#}
+{#                        </a>#}
+{#                        <ul class="dropdown-menu">#}
+{#                            <li><a class="dropdown-item" href="{% url 'Login_App:profile' %}">Profile</a></li>#}
+{#                            <li><a class="dropdown-item" href="{% url 'Payment_App:orders' %}">Orders</a></li>#}
+{#                            <li>#}
+{#                                <hr class="dropdown-divider">#}
+{#                            </li>#}
+{#                            <li><a class="dropdown-item" href="{% url 'Login_App:logout' %}">Logout</a></li>#}
+{#                        </ul>#}
+{#                    </li>#}
+{#                {% else %}#}
+{#                    <li class="nav-item">#}
+{#                        <a href="{% url 'Login_App:login' %}" class="btn btn-primary">Login</a>#}
+{#                    </li>#}
+{#                {% endif %}#}
+{#            </ul>#}
+{##}
+{#            <!-- Search Box -->#}
+{#            <form class="d-flex ms-auto" action="{% url 'Shop_App:search_products' %}" method="get">#}
+{#                <input class="form-control me-2" id="search-input" type="search" name="q"#}
+{#                       placeholder="Search products..." aria-label="Search">#}
+{#                <ul id="suggestion-list" class="list-group"></ul>#}
+{#                <button class="btn btn-outline-success" id="search-button" type="submit">Search</button>#}
+{#            </form>#}
+{##}
+{##}
+{#        </div>#}
+{#    </div>#}
+{#</nav>#}
+{##}
+{#<!-- JavaScript for Search Suggestions -->#}
+{#<script>#}
+{#    document.getElementById('search-input').addEventListener('input', function () {#}
+{#        let query = this.value;#}
+{#        let suggestionList = document.getElementById('suggestion-list');#}
+{#        suggestionList.innerHTML = '';#}
+{##}
+{#        if (query.length > 1) {#}
+{#            fetch(`/product-suggestions/?term=${query}`)#}
+{#                .then(response => response.json())#}
+{#                .then(data => {#}
+{#                    data.forEach(item => {#}
+{#                        let li = document.createElement('li');#}
+{#                        li.textContent = item.name;#}
+{#                        li.className = 'list-group-item';#}
+{##}
+{#                        li.addEventListener('click', function () {#}
+{#                            document.getElementById('search-input').value = item.name;#}
+{#                            suggestionList.innerHTML = '';#}
+{#                        });#}
+{##}
+{#                        suggestionList.appendChild(li);#}
+{#                    });#}
+{#                })#}
+{#                .catch(error => console.error('Error:', error));#}
+{#        }#}
+{#    });#}
+{##}
+{#    document.getElementById('search-input').addEventListener('keypress', function (e) {#}
+{#        if (e.key === 'Enter') {#}
+{#            window.location.href = `/search/?q=${this.value}`;#}
+{#        }#}
+{#    });#}
+{##}
+{#    document.getElementById('search-button').addEventListener('click', function () {#}
+{#        const query = document.getElementById('search-input').value;#}
+{#        if (query.trim() !== '') {#}
+{#            window.location.href = `/search/?q=${query}`;#}
+{#        } else {#}
+{#            alert('Please enter a product name!');#}
+{#        }#}
+{#    });#}
+{#</script>#}
+
+<!-- Fiexed Nav Bar with toggler for small screen and long for larze device -->
+
+
+
+
+

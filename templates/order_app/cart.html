@@ -1,52 +1,310 @@
+{#{% extends 'base.html' %}#}
+{#{% block title_block %}mycart{% endblock %}#}
+{#{% block body_block %}#}
+{#    <div class="container my-5">#}
+{#        <div class="my-5">#}
+{#            <h2>Your Cart</h2>#}
+{#        </div>#}
+{#        <table class="table table-hover">#}
+{#            <thead>#}
+{#            <tr>#}
+{#                <th scope="col" width="15%"></th>#}
+{#                <th scope="col">Product Name</th>#}
+{#                <th scope="col">Quantity</th>#}
+{#                <th scope="col" align="right">Price</th>#}
+{#                <th scope="col">Remove</th>#}
+{#            </tr>#}
+{#            </thead>#}
+{#            <tbody>#}
+{#            {% for cart in carts %}#}
+{#                <tr>#}
+{#                    <th scope="row">{{ forloop.counter }}</th>#}
+{#                    <td>{{ cart.item.name }}</td>#}
+{#                    <td>#}
+{#                        <a class="mr-2" href="{% url 'Order_App:decrease' pk=cart.item.pk %}"><span class="badge badge-light" style="color: red"><i#}
+{#                                class="fas fa-minus"></i></span></a>#}
+{#                        {{ cart.quantity }}#}
+{#                        <a class="mr-2" href="{% url 'Order_App:increase' pk=cart.item.pk %}"><span class="badge badge-light" style="color: black"><i#}
+{#                                class="fas fa-plus"></i></span></a>#}
+{#                    </td>#}
+{#                    <td align="right"> &#2547; {{ cart.get_total }}</td>#}
+{#                    <td><a href="{% url 'Order_App:remove' pk=cart.item.pk %}" class="btn btn-danger btn-sm">Remove From#}
+{#                        Cart</a></td>#}
+{##}
+{#                </tr>#}
+{#            {% endfor %}#}
+{#            <tr>#}
+{#                <th scope="row"></th>#}
+{#                <td colspan="2">Total</td>#}
+{#                <td align="right"> &#2547;{{ order.get_totals|floatformat:2 }} </td>#}
+{#                <td></td>#}
+{#            </tr>#}
+{#            <tr >#}
+{#                <th scope="row"></th>#}
+{#                <td colspan="4" class="text-right" >#}
+{#                    <a class="btn btn-warning mr-4"  href="{% url 'Shop_App:home' %}">Continue Shopping</a>#}
+{#                    <a class="btn btn-success mr-4"  href="{% url 'Payment_App:checkout' %}">Proceed To Checkout</a>#}
+{#                </td>#}
+{#            </tr>#}
+{#            </tbody>#}
+{#        </table>#}
+{#    </div>#}
+{#{% endblock %}#}
+{##}
+{##}
+{#{% extends 'base.html' %}#}
+{#{% block title_block %}My Cart{% endblock %}#}
+{#{% block body_block %}#}
+{#    <div class="container my-5">#}
+{#        <div class="my-5 text-center">#}
+{#            <h2 class="font-weight-bold">Your Cart</h2>#}
+{#            <p class="text-muted">Check your selected products and proceed to checkout.</p>#}
+{#        </div>#}
+{#        <div class="table-responsive">#}
+{#            <table class="table table-hover text-center">#}
+{#                <thead class="thead-light">#}
+{#                <tr>#}
+{#                    <th scope="col" width="10%">#</th>#}
+{#                    <th scope="col">Image</th>#}
+{#                    <th scope="col">Product Name</th>#}
+{#                    <th scope="col">Unit Price</th>#}
+{#                    <th scope="col">Quantity</th>#}
+{#                    <th scope="col">Price</th>#}
+{#                    <th scope="col">Remove</th>#}
+{#                </tr>#}
+{#                </thead>#}
+{#                <tbody>#}
+{#                {% for cart in carts %}#}
+{#                    <tr>#}
+{#                        <th scope="row">{{ forloop.counter }}</th>#}
+{#                        <td>#}
+{#                            <img src="{{ cart.item.mainimage.url }}"#}
+{#                                 style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; display: block; margin: auto;">#}
+{#                        </td>#}
+{##}
+{#                        <td>{{ cart.item.name }}</td>#}
+{#                        <td>{{ cart.item.price }}</td>#}
+{##}
+{#                        <td>#}
+{#                            <a class="mr-2" href="{% url 'Order_App:decrease' pk=cart.item.pk %}"><span#}
+{#                                    class="badge badge-light" style="color: red"><i#}
+{#                                    class="fas fa-minus-circle"></i></span></a>#}
+{#                            {{ cart.quantity }}#}
+{#                            <a class="mr-2" href="{% url 'Order_App:increase' pk=cart.item.pk %}"><span#}
+{#                                    class="badge badge-light" style="color: green"><i#}
+{#                                    class="fas fa-plus-circle"></i></span></a>#}
+{#                        </td>#}
+{#                        <td> &#2547; {{ cart.get_total }}</td>#}
+{#                        <td>#}
+{#                            <a href="{% url 'Order_App:remove' pk=cart.item.pk %}"#}
+{#                               class="btn btn-sm btn-outline-danger">#}
+{#                                Remove#}
+{#                            </a>#}
+{#                        </td>#}
+{#                    </tr>#}
+{#                {% endfor %}#}
+{#                <tr class="font-weight-bold">#}
+{#                    <td></td>#}
+{#                    <td colspan="2" class="text-right">Total</td>#}
+{#                    <td> &#2547; {{ order.get_totals|floatformat:2 }}</td>#}
+{#                    <td></td>#}
+{#                </tr>#}
+{##}
+{#                <tr>#}
+{#                    <th scope="row"></th>#}
+{#                    <td colspan="4" class="text-right">#}
+{#                        <div class="d-flex flex-column flex-md-row justify-content-end align-items-center gap-3">#}
+{#                            <a class="btn btn-warning mb-2 mb-md-0 w-100 w-md-auto" href="{% url 'Shop_App:home' %}">#}
+{#                                Continue Shopping#}
+{#                            </a>#}
+{#                            <a class="btn btn-success w-100 w-md-auto" href="{% url 'Payment_App:checkout' %}">#}
+{#                                Proceed To Checkout#}
+{#                            </a>#}
+{#                        </div>#}
+{#                    </td>#}
+{#                </tr>#}
+{##}
+{##}
+{#                </tbody>#}
+{#            </table>#}
+{#        </div>#}
+{#    </div>#}
+{##}
+{#    <style>#}
+{#        /* Cart Table Styles */#}
+{#        .table thead th {#}
+{#            background-color: #f8f9fa;#}
+{#            font-weight: bold;#}
+{#            font-size: 16px;#}
+{#        }#}
+{##}
+{#        .table-hover tbody tr:hover {#}
+{#            background-color: #f1f1f1;#}
+{#        }#}
+{##}
+{#        /* Button Styling */#}
+{#        .btn-outline-danger {#}
+{#            transition: background-color 0.3s ease, color 0.3s ease;#}
+{#        }#}
+{##}
+{#        .btn-outline-danger:hover {#}
+{#            background-color: #dc3545;#}
+{#            color: #fff;#}
+{#        }#}
+{##}
+{#        /* Responsive Adjustments */#}
+{#        @media (max-width: 768px) {#}
+{#            .table {#}
+{#                font-size: 14px;#}
+{#            }#}
+{##}
+{#            .btn-lg {#}
+{#                font-size: 14px;#}
+{#                padding: 10px 20px;#}
+{#            }#}
+{#        }#}
+{#    </style>#}
+{#{% endblock %}#}
+
+
+
 {% extends 'base.html' %}
-{% block title_block %}mycart{% endblock %}
+{% block title_block %}My Cart{% endblock %}
+
 {% block body_block %}
     <div class="container my-5">
-        <div class="my-5">
-            <h2>Your Cart</h2>
+        <div class="my-5 text-center">
+            <h2 class="font-weight-bold">Your Cart</h2>
+            <p class="text-muted">Check your selected products and proceed to checkout.</p>
         </div>
-        <table class="table table-hover">
-            <thead>
-            <tr>
-                <th scope="col" width="15%"></th>
-                <th scope="col">Product Name</th>
-                <th scope="col">Quantity</th>
-                <th scope="col" align="right">Price</th>
-                <th scope="col">Remove</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for cart in carts %}
-                <tr>
-                    <th scope="row">{{ forloop.counter }}</th>
-                    <td>{{ cart.item.name }}</td>
-                    <td>
-                        <a class="mr-2" href="{% url 'Order_App:decrease' pk=cart.item.pk %}"><span class="badge badge-light" style="color: red"><i
-                                class="fas fa-minus"></i></span></a>
-                        {{ cart.quantity }}
-                        <a class="mr-2" href="{% url 'Order_App:increase' pk=cart.item.pk %}"><span class="badge badge-light" style="color: black"><i
-                                class="fas fa-plus"></i></span></a>
-                    </td>
-                    <td align="right"> &#2547; {{ cart.get_total }}</td>
-                    <td><a href="{% url 'Order_App:remove' pk=cart.item.pk %}" class="btn btn-danger btn-sm">Remove From
-                        Cart</a></td>
 
-                </tr>
-            {% endfor %}
-            <tr>
-                <th scope="row"></th>
-                <td colspan="2">Total</td>
-                <td align="right"> &#2547;{{ order.get_totals|floatformat:2 }} </td>
-                <td></td>
-            </tr>
-            <tr >
-                <th scope="row"></th>
-                <td colspan="4" class="text-right" >
-                    <a class="btn btn-warning mr-4"  href="{% url 'Shop_App:home' %}">Continue Shopping</a>
-                    <a class="btn btn-success mr-4"  href="{% url 'Payment_App:checkout' %}">Proceed To Checkout</a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table class="table table-hover text-center">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col" width="10%">#</th>
+                        <th scope="col">Image</th>
+                        <th scope="col">Product Name</th>
+                        <th scope="col">Unit Price</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col">Total Price</th>
+                        <th scope="col">Remove</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for cart in carts %}
+                        <tr>
+                            <th scope="row">{{ forloop.counter }}</th>
+                            <td>
+                                <img src="{{ cart.item.mainimage.url }}" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;">
+                            </td>
+                            <td>{{ cart.item.name }}</td>
+                            <td>  {{ cart.item.price }}</td>
+                            <td>
+                                <a href="{% url 'Order_App:decrease' pk=cart.item.pk %}" class="badge badge-light text-danger">
+                                    <i class="fas fa-minus-circle"></i>
+                                </a>
+                                {{ cart.quantity }}
+                                <a href="{% url 'Order_App:increase' pk=cart.item.pk %}" class="badge badge-light text-success">
+                                    <i class="fas fa-plus-circle"></i>
+                                </a>
+                            </td>
+                            <td class="text-right">  {{ cart.get_total }}</td>
+                            <td>
+                                <a href="{% url 'Order_App:remove' pk=cart.item.pk %}" class="btn btn-sm btn-outline-danger">
+                                    Remove
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+
+                    <!-- Total Price Row -->
+                    <tr class="font-weight-bold">
+                        <td colspan="5" class="text-right">Total</td>
+                        <td class="text-right"> {{ order.get_totals|floatformat:2 }}</td>
+{#                        &#2547; #}
+                        <td></td>
+                    </tr>
+
+                    <!-- Action Buttons -->
+                    <tr>
+                        <td colspan="7" class="text-right">
+                            <div class="d-flex flex-column flex-md-row justify-content-end align-items-center gap-3">
+                                <a class="btn btn-warning mb-2 mb-md-0 w-100 w-md-auto" href="{% url 'Shop_App:home' %}">
+                                    Continue Shopping
+                                </a>
+                                <a class="btn btn-success w-100 w-md-auto" href="{% url 'Payment_App:checkout' %}">
+                                    Proceed To Checkout
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
+
+    <style>
+    /* Table Responsive */
+    .table-responsive {
+        overflow-x: auto;
+    }
+
+    /* Table Header Styling */
+    .table thead th {
+        background-color: #f8f9fa;
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    /* Align Total Price Properly */
+    .font-weight-bold td:nth-child(6) {
+        text-align: right;
+    }
+
+    /* Button Styling */
+    .btn-outline-danger {
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .btn-outline-danger:hover {
+        background-color: #dc3545;
+        color: #fff;
+    }
+
+    /* Responsive Adjustments for Small Screens */
+    @media (max-width: 768px) {
+        .table {
+            font-size: 12px; /* আগে ১৩ ছিল, এখন ১২ করে দিলাম */
+        }
+        .table th, .table td {
+            padding: 6px; /* আগে ৮ ছিল, এখন ৬ করে দিলাম */
+        }
+        .btn {
+            font-size: 12px; /* আগে ১৪ ছিল, এখন ১২ করে দিলাম */
+            padding: 8px 12px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .table {
+            font-size: 11px; /* ছোট স্ক্রিনের জন্য আরও ছোট করলাম */
+        }
+        .table th, .table td {
+            padding: 4px; /* একদম কমিয়ে দিলাম, যাতে সব ফিট হয় */
+        }
+        .btn {
+            font-size: 11px;
+            padding: 6px 10px;
+        }
+    }
+</style>
+
+
 {% endblock %}
+

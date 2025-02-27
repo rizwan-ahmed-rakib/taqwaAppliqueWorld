@@ -1,0 +1,71 @@
+<!-- Video Section -->
+<div class="video-container mt-4 text-center">
+    <h1 style="background-color: cyan; padding: 10px;">Promotional Videos</h1>
+    <div class="row justify-content-center">
+        {% for video in vid %}
+            <div class="col-md-12 mb-3">
+                <div class="video-card p-3 rounded shadow-lg">
+                    <h4>{{ video.title }}</h4>
+                    <div class="video-frame rounded overflow-hidden">
+                        {% if video.youtube_video_id %}
+                            <iframe class="w-100" height="250"
+                                    src="https://www.youtube.com/embed/{{ video.youtube_video_id }}"
+                                    frameborder="0" allowfullscreen></iframe>
+                        {% elif video.facebook_video_id %}
+                            <iframe class="w-100" height="250"
+                                    src="https://www.facebook.com/plugins/video.php?href=https://www.facebook.com/watch/?v={{ video.facebook_video_id }}"
+                                    frameborder="0" allowfullscreen></iframe>
+                        {% elif video.google_drive_video_id %}
+                            <iframe class="w-100" height="250"
+                                    src="https://drive.google.com/file/d/{{ video.google_drive_video_id }}/preview"
+                                    frameborder="0" allowfullscreen></iframe>
+                        {% else %}
+                            <p style="color: red;">Invalid video URL provided.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+
+
+<!-- Promotional Video Section    sliding style -->
+{#                            <div class="mt-4">#}
+{#                                <h2 class="text-center bg-info text-white py-2">Promotional Videos</h2>#}
+{#                                <div id="videoSlider" class="carousel slide shadow rounded" data-bs-ride="carousel">#}
+{#                                    <div class="carousel-inner">#}
+{#                                        {% for video in vid %}#}
+{#                                            <div class="carousel-item {% if forloop.first %}active{% endif %}">#}
+{#                                                <div class="text-center p-3">#}
+{#                                                    <h5 class="mb-3 text-dark">{{ video.title }}</h5>#}
+{#                                                    <div class="ratio ratio-16x9 rounded overflow-hidden">#}
+{#                                                        {% if video.youtube_video_id %}#}
+{#                                                            <iframe src="https://www.youtube.com/embed/{{ video.youtube_video_id }}"#}
+{#                                                                    frameborder="0" allowfullscreen></iframe>#}
+{#                                                        {% elif video.facebook_video_id %}#}
+{#                                                            <iframe src="https://www.facebook.com/plugins/video.php?href=https://www.facebook.com/watch/?v={{ video.facebook_video_id }}"#}
+{#                                                                    frameborder="0" allowfullscreen></iframe>#}
+{#                                                        {% elif video.google_drive_video_id %}#}
+{#                                                            <iframe src="https://drive.google.com/file/d/{{ video.google_drive_video_id }}/preview"#}
+{#                                                                    frameborder="0" allowfullscreen></iframe>#}
+{#                                                        {% else %}#}
+{#                                                            <p class="text-danger">Invalid video URL provided.</p>#}
+{#                                                        {% endif %}#}
+{#                                                    </div>#}
+{#                                                </div>#}
+{#                                            </div>#}
+{#                                        {% endfor %}#}
+{#                                    </div>#}
+{#                                    <button class="carousel-control-prev" type="button" data-bs-target="#videoSlider"#}
+{#                                            data-bs-slide="prev">#}
+{#                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>#}
+{#                                    </button>#}
+{#                                    <button class="carousel-control-next" type="button" data-bs-target="#videoSlider"#}
+{#                                            data-bs-slide="next">#}
+{#                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>#}
+{#                                    </button>#}
+{#                                </div>#}
+{#                            </div>#}

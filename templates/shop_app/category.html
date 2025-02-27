@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+
+{% block body_block %}
+    <div class="container my-5">
+        <h2 class="text-center mb-5">Our Categories</h2>
+        <div class="row">
+            {% for category in categories %}
+                <div class="col-md-4 col-sm-6 col-lg-3 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <!-- Category Image -->
+                        <img src="{{ category.image.url }}" class="card-img-top" alt="Category Image"
+                             style="height: 200px; object-fit: cover; border-bottom: 3px solid #f1f1f1;">
+
+                        <!-- Card Body -->
+                        <div class="card-body text-center">
+                            <h5 class="card-title text-truncate">{{ category.title }}</h5>
+                            <a href="{% url 'Shop_App:category_wise_product_list' pk=category.pk %}" class="btn btn-primary btn-sm mt-2">View
+                                Products</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+
+
+{#{% extends 'base.html' %}#}
+{#{% block body_block %}#}
+{#    <div class="container my-5">#}
+{#        <h2 class="my-5">Categories</h2>#}
+{#        <div class="row">#}
+{#            {% for category in categories %}#}
+{#                <div class="col-md-4 col-sm-6 col-lg-3">#}
+{#                    <div class="card">#}
+{#                        <div class="card-body text-center">#}
+{#                            <h5>{{ category.title }}</h5>#}
+{#                            <!-- Category Image -->#}
+{#                            <img src="{{ category.image.url }}" class="card-img-top" alt="Category Image"#}
+{#                                 style="height: 200px; object-fit: cover; border-bottom: 3px solid #f1f1f1;">#}
+{##}
+{#                            <a href="{% url 'Shop_App:category_products' pk=category.pk %}" class="btn btn-primary">View#}
+{#                                Products</a>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#            {% endfor %}#}
+{#        </div>#}
+{#    </div>#}
+{#{% endblock %}#}

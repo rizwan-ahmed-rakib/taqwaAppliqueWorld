@@ -12,3 +12,6 @@ def cart_total(user):
         return order[0].orderitems.count()
     else:
         return 0
+
+
+

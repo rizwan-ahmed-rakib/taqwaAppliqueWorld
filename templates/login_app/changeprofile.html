@@ -1,16 +1,334 @@
+{#{% extends 'base.html' %}#}
+{#{% load crispy_forms_tags %}#}
+{#{% block title_block %}'Profile{% endblock %}#}
+{#{% block body_block %}#}
+{#    <h2>Create Profile:</h2>#}
+{#    <form method="POST" enctype="multipart/form-data">#}
+{#    {{ form|crispy }}#}
+{#    {% csrf_token %}#}
+{#        <button type="submit" class="btn btn-warning btn-sm">profile Update</button>#}
+{##}
+{#    </form>#}
+{#    <BR>#}
+{#    <BR>#}
+{#    <BR>#}
+{##}
+{#{% endblock %}#}
+
+
+{#{% extends 'base.html' %}#}
+{#{% load crispy_forms_tags %}#}
+{##}
+{#{% block title_block %} Profile {% endblock %}#}
+{##}
+{#{% block body_block %}#}
+{#<div class="container mt-5">#}
+{#    <div class="row justify-content-center">#}
+{#        <div class="col-md-8">#}
+{#            <div class="card shadow-lg p-4">#}
+{#                <div class="text-center">#}
+{#                    <!-- Profile Image -->#}
+{#                    <img src="{{ user.profile.profile_picture.url }}" class="profile-img img-fluid rounded-circle shadow" alt="Profile Picture">#}
+{##}
+{#                    <h3 class="mt-3 text-primary">{{ user.username }}</h3>#}
+{#                    <p class="text-muted">{{ user.email }}</p>#}
+{#                </div>#}
+{##}
+{#                <hr>#}
+{##}
+{#                <!-- Profile Details -->#}
+{#                <div class="profile-details">#}
+{#                    <p><strong>Full Name:</strong> {{ user.profile.full_name }}</p>#}
+{#                    <p><strong>Phone Number:</strong> {{ user.profile.phone }}</p>#}
+{#                    <p><strong>Address:</strong> {{ user.profile.address }}</p>#}
+{#                    <p><strong>Bio:</strong> {{ user.profile.bio }}</p>#}
+{#                </div>#}
+{##}
+{#                <hr>#}
+{##}
+{#                <!-- Edit Profile Button -->#}
+{#                <div class="text-center">#}
+{#                    <a href="#" class="btn btn-primary">Edit Profile</a>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{#</div>#}
+{##}
+{#<!-- Custom Styling -->#}
+{#<style>#}
+{#    .profile-img {#}
+{#        width: 120px;#}
+{#        height: 120px;#}
+{#        border: 4px solid #ddd;#}
+{#        object-fit: cover;#}
+{#    }#}
+{##}
+{#    .card {#}
+{#        border-radius: 10px;#}
+{#        background: #ffffff;#}
+{#        padding: 20px;#}
+{#    }#}
+{##}
+{#    .profile-details p {#}
+{#        font-size: 16px;#}
+{#        margin: 5px 0;#}
+{#    }#}
+{##}
+{#    .btn-primary {#}
+{#        background-color: #007bff;#}
+{#        border: none;#}
+{#        padding: 10px 20px;#}
+{#        font-size: 16px;#}
+{#    }#}
+{#</style>#}
+{##}
+{#{% endblock %}#}
+
+
+{#good#}
+
+
+{#{% extends 'base.html' %}#}
+{#{% load crispy_forms_tags %}#}
+{##}
+{#{% block title_block %} Profile {% endblock %}#}
+{##}
+{#{% block body_block %}#}
+{#<div class="container mt-5 d-flex justify-content-center">#}
+{#    <div class="card shadow-lg p-4 border-0" style="max-width: 400px; width: 100%; border-radius: 12px;">#}
+{#        <div class="text-center">#}
+{#            <div class="position-relative">#}
+{#                <img id="profile-preview" src="{{ user.profile.profile_picture.url }}"#}
+{#                     class="rounded-circle border shadow-sm" width="120" height="120" alt="Profile Picture">#}
+{#            </div>#}
+{#            <h4 class="mt-3 fw-bold">{{ user.profile.full_name }}</h4>#}
+{#            <p class="text-muted mb-1">{{ user.profile.city }}, {{ user.profile.country }}</p>#}
+{#            <p class="text-muted small"><strong>Username:</strong> {{ user.profile.username }}</p>#}
+{#            <p class="text-muted small"><strong>Phone:</strong> {{ user.profile.phone }}</p>#}
+{#            <p class="text-muted small"><strong>Joined:</strong> {{ user.profile.date_joined|date:"F d, Y" }}</p>#}
+{#            <button class="btn btn-primary btn-sm mt-2" data-bs-toggle="modal" data-bs-target="#editProfileModal">#}
+{#                Edit Profile#}
+{#            </button>#}
+{#        </div>#}
+{#    </div>#}
+{#</div>#}
+{##}
+{#<!-- Profile Edit Modal -->#}
+{#<div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">#}
+{#    <div class="modal-dialog">#}
+{#        <div class="modal-content">#}
+{#            <div class="modal-header">#}
+{#                <h5 class="modal-title">Edit Profile</h5>#}
+{#                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>#}
+{#            </div>#}
+{#            <div class="modal-body">#}
+{#                <form method="POST" enctype="multipart/form-data" STYLE="padding-bottom: 30px">#}
+{#                    {% csrf_token %}#}
+{#                    {{ form|crispy }}#}
+{#                    <div class="mb-3 text-center">#}
+{#                        <label for="id_profile_picture" class="form-label">Change Profile Picture</label>#}
+{#                        <input type="file" class="form-control" id="id_profile_picture" name="profile_picture" onchange="previewImage(event)">#}
+{#                        <img id="new-profile-preview" src="" class="rounded-circle mt-3 border shadow-sm" width="100" height="100" alt="New Profile Preview" style="display: none;">#}
+{#                    </div>#}
+{#                    <button type="submit" class="btn btn-success w-100">Save Changes</button>#}
+{#                </form>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{#</div>#}
+{##}
+{#<script>#}
+{#    function previewImage(event) {#}
+{#        var reader = new FileReader();#}
+{#        reader.onload = function(){#}
+{#            var output = document.getElementById('new-profile-preview');#}
+{#            output.src = reader.result;#}
+{#            output.style.display = 'block';#}
+{#        };#}
+{#        reader.readAsDataURL(event.target.files[0]);#}
+{#    }#}
+{#</script>#}
+{##}
+{#{% endblock %}#}
+
+
+
+
+{#{% extends 'base.html' %}#}
+{#{% load crispy_forms_tags %}#}
+{##}
+{#{% block title_block %} Profile {% endblock %}#}
+{##}
+{#{% block body_block %}#}
+{#<div class="container mt-5">#}
+{#    <div class="row">#}
+{#        <!-- Profile Card -->#}
+{#        <div class="col-md-6">#}
+{#            <div class="card shadow-lg p-4">#}
+{#                <div class="text-center">#}
+{#                    <h2 class="mb-3">User Profile</h2>#}
+{#                    <img id="profile-preview" src="{{ user.profile.profile_picture.url }}" class="rounded-circle border" width="150" height="150" alt="Profile Picture">#}
+{#                    <h4 class="mt-3 fw-bold">{{ user.profile.full_name }}</h4>#}
+{#                    <p class="text-muted">{{ user.profile.city }}, {{ user.profile.country }}</p>#}
+{#                    <p><strong>Username:</strong> {{ user.profile.username }}</p>#}
+{#                    <p><strong>Address:</strong> {{ user.profile.address_1 }}</p>#}
+{#                    <p><strong>Phone:</strong> {{ user.profile.phone }}</p>#}
+{#                    <p><strong>Joined:</strong> {{ user.profile.date_joined|date:"F d, Y" }}</p>#}
+{#                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editProfileModal">Edit Profile</button>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{##}
+{#        <!-- Chat Section -->#}
+{#        <div class="col-md-6">#}
+{#            <div class="card shadow-lg p-4">#}
+{#                <h3 class="text-center">Chat</h3>#}
+{#                <div class="chat-box border rounded p-3" style="height: 300px; overflow-y: auto; background-color: #f8f9fa;">#}
+{#                    <div id="chat-messages">#}
+{#                        <!-- Messages will be displayed here dynamically -->#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="mt-3">#}
+{#                    <form id="chat-form" enctype="multipart/form-data">#}
+{#                        <div class="input-group">#}
+{#                            <input type="text" id="chat-input" class="form-control" placeholder="Type a message...">#}
+{#                            <input type="file" id="file-input" class="form-control" style="display: none;">#}
+{#                            <button class="btn btn-outline-secondary" type="button" onclick="document.getElementById('file-input').click();">📎</button>#}
+{#                            <button class="btn btn-success" type="submit">Send</button>#}
+{#                        </div>#}
+{#                    </form>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{#</div>#}
+{##}
+{#<!-- Profile Edit Modal -->#}
+{#<div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">#}
+{#    <div class="modal-dialog">#}
+{#        <div class="modal-content">#}
+{#            <div class="modal-header">#}
+{#                <h5 class="modal-title">Edit Profile</h5>#}
+{#                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>#}
+{#            </div>#}
+{#            <div class="modal-body">#}
+{#                <form method="POST" enctype="multipart/form-data">#}
+{#                    {% csrf_token %}#}
+{#                    {{ form|crispy }}#}
+{#                    <div class="mb-3 text-center">#}
+{#                        <label for="id_profile_picture" class="form-label">Change Profile Picture</label>#}
+{#                        <input type="file" class="form-control" id="id_profile_picture" name="profile_picture" onchange="previewImage(event)">#}
+{#                        <img id="new-profile-preview" src="" class="rounded-circle mt-3 border" width="120" height="120" alt="New Profile Preview" style="display: none;">#}
+{#                    </div>#}
+{#                    <button type="submit" class="btn btn-success w-100">Save Changes</button>#}
+{#                </form>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{#</div>#}
+{##}
+{#<script>#}
+{#    function previewImage(event) {#}
+{#        var reader = new FileReader();#}
+{#        reader.onload = function(){#}
+{#            var output = document.getElementById('new-profile-preview');#}
+{#            output.src = reader.result;#}
+{#            output.style.display = 'block';#}
+{#        };#}
+{#        reader.readAsDataURL(event.target.files[0]);#}
+{#    }#}
+{##}
+{#    document.getElementById("chat-form").addEventListener("submit", function(event) {#}
+{#        event.preventDefault();#}
+{#        var messageInput = document.getElementById("chat-input");#}
+{#        var chatMessages = document.getElementById("chat-messages");#}
+{#        if (messageInput.value.trim() !== "") {#}
+{#            var newMessage = document.createElement("div");#}
+{#            newMessage.classList.add("alert", "alert-secondary", "mt-2");#}
+{#            newMessage.textContent = messageInput.value;#}
+{#            chatMessages.appendChild(newMessage);#}
+{#            messageInput.value = "";#}
+{#            chatMessages.scrollTop = chatMessages.scrollHeight;#}
+{#        }#}
+{#    });#}
+{#</script>#}
+{#{% endblock %}#}
+
+
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
-{% block title_block %}'Profile{% endblock %}
-{% block body_block %}
-    <h2>Create Profile:</h2>
-    <form method="POST">
-    {{ form|crispy }}
-    {% csrf_token %}
-        <button type="submit" class="btn btn-warning btn-sm">profile Update</button>
 
-    </form>
-    <BR>
-    <BR>
-    <BR>
+{% block title_block %} Profile {% endblock %}
+
+{% block body_block %}
+<div class="container mt-5 d-flex justify-content-center">
+    <div class="card shadow-lg p-4 border-0" style="max-width: 400px; width: 100%; border-radius: 12px;">
+        <div class="text-center">
+            <div class="position-relative">
+                <!-- Display current profile picture -->
+                <img id="profile-preview" src="{{ user.profile.profile_picture.url }}"
+                     class="rounded-circle border shadow-sm" width="120" height="120" alt="Profile Picture">
+                <!-- Button to change profile picture -->
+                <button class="btn btn-secondary btn-sm position-absolute bottom-0 end-0 mb-1 me-1"
+                        data-bs-toggle="modal" data-bs-target="#editProfileModal">
+                    <i class="bi bi-pencil-square"></i> Change
+                </button>
+            </div>
+            <h4 class="mt-3 fw-bold">{{ user.profile.full_name }}</h4>
+            <p class="text-muted mb-1">{{ user.profile.city }}, {{ user.profile.country }}</p>
+            <p class="text-muted small"><strong>Username:</strong> {{ user.profile.username }}</p>
+            <p class="text-muted small"><strong>Phone:</strong> {{ user.profile.phone }}</p>
+            <p class="text-muted small"><strong>Joined:</strong> {{ user.profile.date_joined|date:"F d, Y" }}</p>
+        </div>
+    </div>
+</div>
+
+<!-- Profile Edit Modal -->
+<div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Profile</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <div class="mb-3 text-center">
+                        <label for="id_profile_picture" class="form-label">Change Profile Picture</label>
+                        <input type="file" class="form-control" id="id_profile_picture" name="profile_picture" onchange="previewImage(event)">
+
+                        <!-- Show the current profile picture -->
+                        <div class="mb-3">
+                            <h6>Current Profile Picture</h6>
+                            <img id="current-profile-picture" src="{{ user.profile.profile_picture.url }}"
+                                 class="rounded-circle" width="120" height="120" alt="Current Profile Picture">
+                        </div>
+
+                        <!-- Show the new profile picture preview -->
+                        <h6 class="mt-3">Preview New Picture</h6>
+                        <img id="new-profile-preview" src="" class="rounded-circle mt-3 border shadow-sm" width="120" height="120" alt="New Profile Preview" style="display: none;">
+                    </div>
+                    <button type="submit" class="btn btn-success w-100">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function previewImage(event) {
+        var reader = new FileReader();
+        reader.onload = function(){
+            var output = document.getElementById('new-profile-preview');
+            output.src = reader.result;
+            output.style.display = 'block';
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    }
+</script>
 
 {% endblock %}
+

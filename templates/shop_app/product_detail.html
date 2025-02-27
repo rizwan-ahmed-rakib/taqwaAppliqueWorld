@@ -1,38 +1,110 @@
 {% extends 'base.html' %}
-{% block title_block %}{{ product.name }} detail{% endblock %}
+{% block title_block %}{{ product.name }} Detail{% endblock %}
 {% block body_block %}
-    {{ object.name }}
-    <div class="container my-5">
-        <div class="card">
-            <div class="row">
-                <aside class="col-sm-5 border-right" >
-                    <article class="gallery_wrap" >
-                        <div class="img-big-wrap">
-                            <div>
-                                <a href="#"><img src="{{ object.mainimage.url }}" alt="product picture" style="width: 450px">
-                                </a>
-                            </div>
-                        </div>
-                    </article>
-                </aside>
-                <aside class="col-sm-7" >
-                    <article class="card-body p-5" >
-                        <h3 class="title mp-3">{{ object.name }}</h3>
-                        <p class="price-detail-wrap">
-                            <span class="price h3 text-warning">
-                              BDT &#2547;<span class="num">{{ object.price }}</span>
-                            </span>
-                        </p>
-                        <dl class="item-property">
-                            <dt>Description</dt>
-                            <dd>
-                                <p>{{ object.detail_text|linebreaks }}</p>
-                            </dd>
-                        </dl>
-                        <a href="{% url 'Order_App:add' pk=object.pk %}" class="btn btn-lg btn-outline-primary text-uppercase"><i class="fas fa-shopping-cart"></i>Add to Cart</a>
-                    </article>
-                </aside>
-            </div>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+
+        }
+
+        body {
+            background-color: #f9f9f9;
+            color: #333;
+        {#padding: 20px;#} padding-top: 100px;
+        }
+
+        .product-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            padding-top: 50px;
+        }
+
+        .product-image {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f1f1f1;
+        }
+
+        .product-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .product-details {
+            padding: 20px;
+        }
+
+        .product-details h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .product-details p {
+            margin: 10px 0;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        .product-price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 20px 0;
+            color: #e67e22;
+        }
+
+        .add-to-cart-btn {
+            display: inline-block;
+            background-color: #e67e22;
+            color: #fff;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .add-to-cart-btn:hover {
+            background-color: #cf6d1c;
+        }
+
+        @media (max-width: 768px) {
+            .product-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+
+    <div class="product-container">
+        <div class="product-image">
+            <img src="{{ product.mainimage.url }}" alt="Product Image">
+        </div>
+        <div class="product-details">
+            <h1>{{ product.name }}</h1>
+            <p>{{ product.detail_text|linebreaks }}</p>
+            <p class="product-price">&#2547;{{ product.price }}</p>
+            <a href="{% url 'Order_App:add' pk=product.pk %}" class="add-to-cart-btn">Add to Cart</a>
+
         </div>
     </div>
+
+
 {% endblock %}
+
+
+
+
+

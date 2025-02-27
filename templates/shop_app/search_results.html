@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+
+
+<style>
+    /* Card Image Styling */
+    .card img {
+        height: 250px;
+        object-fit: cover; /* ইমেজকে সুন্দরভাবে ফিট করাবে */
+        border-radius: 0.5rem 0.5rem 0 0;
+    }
+
+    /* Card Styling */
+    .card {
+        border: none;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-5px); /* hover করলে কার্ড একটু উপরে উঠবে */
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Responsive Typography */
+    h2 {
+        font-size: 2rem;
+        font-weight: bold;
+    }
+
+    .card-title {
+        font-size: 1.25rem;
+    }
+
+    .card-text {
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+
+    /* Button Styling */
+    .btn-outline-primary {
+        font-weight: bold;
+        border-width: 2px;
+    }
+
+</style>
+
+
+{% block body_block %}
+    <h2 class="text-center my-4">Search Results for "{{ query }}"</h2>
+
+    <div class="container">
+        {% if products %}
+            <div class="row">
+                {% for product in products %}
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card shadow-sm h-100">
+                            <!-- Product Image -->
+                            <img src="{{ product.mainimage.url }}" class="card-img-top img-fluid" alt="Product Image">
+
+                            <!-- Product Details -->
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title text-primary"><a href="{% url 'Shop_App:product_detail' pk=product.pk %}">{{ product.name }}</a></h5>
+                                <p class="card-text text-muted">
+{#                                    {{ product.detail_text|linebreaks }}#}
+                                    {{ product.detail_text | truncatewords:20 }}
+                                </p>
+                                <p class="h5 text-warning mt-auto">
+                                    BDT &#2547;<span class="fw-bold">{{ product.price }}</span>
+                                </p>
+                                <a href="{% url 'Order_App:add' pk=product.pk %}"
+                                   class="btn btn-outline-primary w-100 mt-3">
+                                    <i class="fas fa-shopping-cart"></i> Add to Cart
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-danger text-center">No products found matching your search.</p>
+        {% endif %}
+    </div>
+{% endblock %}
+

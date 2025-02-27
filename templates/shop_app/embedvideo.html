@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% load embed_video_tags %}
+{% block body_block %}
+    hi am test
+    {% for video in videos %}
+        <h4>{{ video.title }}</h4>
+        {% video video.video_url as promotionVideo %}
+            {#            <div class="carousel-item {% if forloop.first %}active{% endif %}">#}
+            <div class="embed-responsive embed-responsive-16by9">
+                <iframe class="embed-responsive-item d-block w-100" src="{{ promotionVideo.url }}"
+                        frameborder="0" allowfullscreen></iframe>
+                <h1 style="color: black">{{ video.title }}</h1>
+            </div>
+            {#            </div>#}
+
+        {% endvideo %}
+        <h3 style="color:red;">{{ video.title }}</h3>
+    {% endfor %}
+
+
+
+
+    jjjjjjjjjjjjjjjjjjj
+
+
+    <div id="videoSlider" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            <h1 style="text-align: center; background-color: cyan;">Happy Customers</h1>
+            {% for video in videos %}
+                <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                    {#                <iframe src="https://drive.google.com/file/d/{{ video.google_drive_id }}/preview" width="640" height="360" allow="autoplay"></iframe>#}
+                    <iframe src="https://drive.google.com/file/d/1dJ-hLLGKsRiN1L9cwyfmQ8PK8ICsyk-P/preview" width="640"
+                            height="360" allow="autoplay"></iframe>
+                    <iframe src="https://drive.google.com/file/d/1lNV9XScStGpfJYepK-XGJ3FQpD6wRPA6/preview" width="640"
+                            height="360" allow="autoplay"></iframe>
+                    <iframe src="https://drive.google.com/file/d/1lNV9XScStGpfJYepK-XGJ3FQpD6wRPA6/preview" width="640"
+                            height="360" allow="autoplay"></iframe>
+                </div>
+            {% endfor %}
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#videoSlider" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#videoSlider" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        </button>
+    </div>
+
+    <div class="container mt-4">
+        <h1 style="text-align: center; background-color: cyan; color: white; padding: 15px; border-radius: 10px;">
+            Promotional Videos
+        </h1>
+
+        <div class="row">
+            {% for video in videos%}
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div style="border: none; border-radius: 10px; overflow: hidden; box-shadow: 0 5px 10px rgba(0,0,0,0.2); transition: all 0.3s ease-in-out; padding: 10px; background-color: #fff;">
+                        <div style="padding: 10px;">
+                            <h5 style="text-align: center; font-weight: bold; color: #333;">{{ video.title }}</h5>
+
+                            {% if video.youtube_video_id %}
+                                <!-- YouTube Video Embed -->
+                                <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+                                    <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 10px; transition: transform 0.3s ease-in-out;"
+                                            onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 5px 15px rgba(0, 0, 0, 0.3)';"
+                                            onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none';"
+                                            src="https://www.youtube.com/embed/{{ video.youtube_video_id }}"
+                                            frameborder="0" allowfullscreen></iframe>
+                                </div>
+
+                            {% elif video.facebook_video_id %}
+                                <!-- Facebook Video Embed -->
+                                <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+                                    <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 10px; transition: transform 0.3s ease-in-out;"
+                                            onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 5px 15px rgba(0, 0, 0, 0.3)';"
+                                            onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none';"
+                                            src="https://www.facebook.com/plugins/video.php?href=https://www.facebook.com/watch/?v={{ video.facebook_video_id }}"
+                                            frameborder="0" allowfullscreen></iframe>
+                                </div>
+
+                            {% elif video.google_drive_video_id %}
+                                <!-- Google Drive Video Embed -->
+                                <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+                                    <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 10px; transition: transform 0.3s ease-in-out;"
+                                            onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 5px 15px rgba(0, 0, 0, 0.3)';"
+                                            onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none';"
+                                            src="https://drive.google.com/file/d/{{ video.google_drive_video_id }}/preview"
+                                            frameborder="0" allowfullscreen></iframe>
+                                </div>
+
+                            {% else %}
+                                <!-- Invalid Video URL -->
+                                <p style="color: red; text-align: center;">Invalid video URL provided.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+
+{% endblock %}

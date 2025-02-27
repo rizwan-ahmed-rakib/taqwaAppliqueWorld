@@ -1,46 +1,185 @@
 {% extends 'base.html' %}
 {% block body_block %}
+
+    <style>
+        /* Table Container */
+        .order-table-container {
+            width: 100%;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Table Styling */
+        .order-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 16px;
+            text-align: left;
+        }
+
+        .order-table thead {
+            background-color: #343a40;
+            color: white;
+        }
+
+        .order-table th, .order-table td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+        }
+
+        /* Product Image */
+        .product-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #ddd;
+            margin-right: 10px;
+        }
+
+        /* Status Badge */
+        .badge {
+            font-size: 14px;
+            padding: 6px 12px;
+            border-radius: 5px;
+            display: inline-block;
+        }
+
+        .badge-processing {
+            background-color: #ffc107;
+            color: black;
+        }
+
+        .badge-completed {
+            background-color: #28a745;
+            color: white;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .order-table {
+                display: none;
+            }
+
+            .order-card {
+                background: #f8f9fa;
+                padding: 10px;
+                margin-bottom: 10px;
+                border-radius: 10px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            }
+
+            .order-card h5 {
+                margin: 0;
+                font-size: 16px;
+                color: #007bff;
+            }
+
+            .order-card p {
+                margin: 5px 0;
+                font-size: 14px;
+            }
+
+            .order-card .product-img {
+                width: 35px;
+                height: 35px;
+                margin-right: 5px;
+            }
+
+            .order-card .badge {
+                display: block;
+                margin-top: 5px;
+            }
+        }
+    </style>
+
     <div class="container mt-5">
-        <h2 class="text-center"><strong>Your Order</strong></h2>
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card mt-5" style="height: auto">
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Order Id</th>
-                                <th scope="col">Products</th>
-                                <th scope="col">Status</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for order in orders %}
-                                <tr>
-                                    <th scope="row">{{ forloop.counter }}</th>
-                                    <th><a href="#">{{ order.orderId }}</a></th>
-                                    <td>
-                                        {% for item in order.orderitems.all %} {{ item }} <br> {% endfor %}
-                                    </td>
-                                    <td><span class="badge bg-success">Processing Your Order</span></td>
-{#                                    <td><span class="badge badge-primary">Processing Your Order</span></td>#}
-                                </tr>
-                            {% endfor %}
-                            {#                                <tr>#}
-                            {#                                    <td>1</td>#}
-                            {#                                    <td>order number</td>#}
-                            {#                                    <td>products u</td>#}
-                            {#                                    <td>pending</td>#}
-                            {#                                </tr>#}
-                            </tbody>
-                        </table>
-                    </div>
+        <h2 class="text-center"><strong>Your Orders</strong></h2>
+
+        <!-- Desktop View -->
+        <div class="order-table-container mt-4 d-none d-md-block">
+            <table class="order-table">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Order ID</th>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Unit Price</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for order in orders %}
+                    {% for item in order.orderitems.all %}
+                        <tr>
+                            {% if forloop.first %}
+                                <td rowspan="{{ order.orderitems.all|length }}">{{ forloop.parentloop.counter }}</td>
+                                <td rowspan="{{ order.orderitems.all|length }}">
+                                    <a href="#" style="text-decoration: none; color: #007bff;">{{ order.orderId }} </a>
+                                    <br>
+                                    Ordered At: {{ order.created }}
+                                </td>
+                            {% endif %}
+                            <td>
+                                <div style="display: flex; align-items: center;">
+                                    <img src="{{ item.item.mainimage.url }}" alt="{{ item.item.name }}"
+                                         class="product-img">
+                                    <span>{{ item.item.name }}</span>
+                                </div>
+                            </td>
+                            <td>{{ item.quantity }}</td>
+                            <td>{{ item.item.price }} BDT</td>
+                            <td>{{ item.get_total }} BDT</td>
+                            {% if forloop.first %}
+                                <td rowspan="{{ order.orderitems.all|length }}">
+                                    <span class="badge badge-processing">Processing Your Order</span>
+                                </td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                    <tr>
+                        <td colspan="5" class="text-right"><strong>Grand Total:</strong></td>
+                        <td><strong class="text-success">{{ order.get_totals }} BDT</strong></td>
+                        <td></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Mobile View -->
+        <div class="order-mobile-container d-block d-md-none">
+            {% for order in orders %}
+                <div class="order-card">
+                    <h5>Order ID: <a href="#" style="text-decoration: none; color: #007bff;">{{ order.orderId }}</a>
+                    </h5>
+
+                    Ordered At: {{ order.created }}
+                    {% for item in order.orderitems.all %}
+                        <div style="display: flex; align-items: center; margin-bottom: 5px;">
+                            <img src="{{ item.item.mainimage.url }}" alt="{{ item.item.name }}" class="product-img">
+                            <div>
+                                <p><strong>{{ item.item.name }}</strong></p>
+                                <p>Qty: {{ item.quantity }} | Unit Price: {{ item.item.price }} BDT</p>
+                                <p><strong>Total: {{ item.get_total }} BDT</strong></p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    <p><strong>Grand Total: {{ order.get_totals }} BDT</strong></p>
+                    <span class="badge badge-processing">Processing Your Order</span>
+
                 </div>
-            </div>
-            <div class="col-md-12 my-5 text-center">
-                <a href="{% url 'Shop_App:home' %}">Back to Home</a>
-            </div>
+            {% endfor %}
+        </div>
+
+        <div class="col-md-12 text-center my-4">
+            <a href="{% url 'Shop_App:home' %}" class="btn btn-primary">Back to Home</a>
         </div>
     </div>
+
 {% endblock %}

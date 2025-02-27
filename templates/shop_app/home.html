@@ -1,30 +1,370 @@
 {% extends 'base.html' %}
+{% load custom_tags %}
+{% load embed_video_tags %}
+
+
 {% block body_block %}
-    <div class="container my-5">
-        <h2 class="my-5"> Products Category</h2>
-        <div class="row"> <!--all products show under this tag-->
-            {% for product in object_list %}
-                {#                        # here object_list is ListViews by default object list,why we did not pass object name in context dictionary##}
-                <div class="col-md-6 col-sm-12 col-lg-3">
-                    {#            products showing number based on screen under this tag#}
-                    <figure class="card card-product">
-                        {#                    under this tag every single product is shown#}
-                        <div class=" img-wrap ">
-                            <img src="{{ product.mainimage.url }}" alt="picture" width="100%" height="300px">
+    <style>
+        /* Categories Slider Styles */
+        .categories-slider {
+            background-color: #f9f9f9; /* Light background */
+            border-radius: 15px; /* Rounded corners */
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Light shadow */
+            overflow: visible; /* Prevent clipping */
+        }
+
+        .category-circle {
+            width: 100px;
+            height: 100px;
+            border: 5px solid #007bff; /* Primary color border */
+            border-radius: 50%; /* Circular design */
+            overflow: hidden; /* Image crop */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: auto;
+            transition: transform 0.3s ease, box-shadow 0.3s ease; /* Hover effect */
+            position: relative; /* Ensure proper stacking */
+        }
+
+        .category-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Image nicely fit */
+        }
+
+        .category-circle:hover {
+            transform: scale(1.1); /* Scale on hover */
+            box-shadow: 0 8px 20px rgba(0, 123, 255, 0.3); /* Shadow on hover */
+            z-index: 10; /* Bring to front */
+        }
+
+        /* Optional: Add margin between circles for better spacing */
+        .carousel-item .text-center {
+            margin: 10px 0; /* Space between items */
+        }
+
+        .carousel-control-prev,
+        .carousel-control-next {
+            width: 50px;
+            height: 50px;
+            background-color: rgba(0, 0, 0, 0.6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease-in-out;
+        }
+
+        .carousel-control-prev,
+        .carousel-control-next {
+            width: 50px;
+            height: 50px;
+            background-color: rgba(0, 0, 0, 0.6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease-in-out;
+            position: absolute;
+            top: 50%; /* বাটন মাঝখানে আনবে */
+            transform: translateY(-50%);
+        }
+
+        /* ছোট স্ক্রিনের জন্য বাটন নিচের দিকে যাবে */
+        @media (max-width: 576px) {
+            .carousel-control-prev,
+            .carousel-control-next {
+                width: 35px;
+                height: 35px;
+                top: auto; /* উপরের position কেটে দেওয়া */
+                bottom: 50%; /* নিচে নিয়ে যাওয়া */
+                transform: none;
+            }
+        }
+
+        /* বড় স্ক্রিনের জন্য আগের মতোই মাঝখানে থাকবে */
+        @media (min-width: 992px) {
+            .carousel-control-prev,
+            .carousel-control-next {
+                width: 50px;
+                height: 50px;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+        }
+
+
+    </style>
+    <!-- 🔥Category section + Top Selling Products Section -->
+    <section class="products-section py-1">
+        <div class="container">
+            <div class="row">
+                <!-- Categories Section -->
+                <div class="col-md-6">
+                    <h2 class="text-center mb-4">Product Categories</h2>
+                    <div id="categoriesCarousel" class="carousel slide" data-bs-ride="carousel">
+                        <!-- Carousel Inner -->
+                        <div class="carousel-inner">
+                            {% for category_group in categories|slice:":"|make_groups:3 %}
+                                <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                    <div class="d-flex justify-content-around">
+                                        {% for category in category_group %}
+                                            <div class="text-center">
+                                                <!-- Circular Image -->
+                                                <div class="category-circle">
+                                                    <img src="{{ category.image.url }}" alt="{{ category.title }}"
+                                                         class="img-fluid rounded-circle"
+                                                         style="width: 100px; height: 100px;">
+                                                </div>
+                                                <h5 class="mt-3">{{ category.title }}</h5>
+                                                <a href="{% url 'Shop_App:category_wise_product_list' pk=category.pk %}"
+                                                   class="btn btn-outline-primary mt-2">View Products</a>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            {% endfor %}
                         </div>
-                        <figcaption class="info-wrap"><!--to show information of a single product-->
-                            <h6 class="title"><a href="{% url 'Shop_App:product_detail' pk=product.pk %}">{{ product.name }}</a> </h6>
-                            <div class="action-wrap">
-                                <div class="price-wrap5">
-                                    <span class="price-new">&#2547; {{ product.price|floatformat:2 }}</span>
-                                    <span class="price-old"><strike>&#2547; {{ product.old_price|floatformat:2 }}</strike></span>
+
+                        <!-- Carousel Controls -->
+                        <button class="carousel-control-prev" type="button" data-bs-target="#categoriesCarousel"
+                                data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon bg-dark p-3 rounded-circle"
+                                  aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#categoriesCarousel"
+                                data-bs-slide="next">
+                            <span class="carousel-control-next-icon bg-dark p-3 rounded-circle"
+                                  aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Top Selling Products Section -->
+                <div class="col-md-6">
+                    <h2 class="text-center mb-4">Top Selling Products</h2>
+                    <div id="topSellingCarousel" class="carousel slide" data-bs-ride="carousel">
+                        <!-- Carousel Inner -->
+                        <div class="carousel-inner">
+                            {% for product_group in object_list|slice:":"|make_groups:3 %}
+                                <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                    <div class="d-flex justify-content-around">
+                                        {% for product in product_group %}
+                                            <div class="text-center">
+                                                <!-- Circular Product Image -->
+                                                <div class="product-circle">
+                                                    <img src="{{ product.mainimage.url }}" alt="{{ product.title }}"
+                                                         class="img-fluid rounded-circle"
+                                                         style="width: 100px; height: 100px;">
+                                                </div>
+                                                <h5 class="mt-3">{{ product.title }}</h5>
+                                                <p class="text-muted">{{ product.price }} BDT</p>
+                                                <a href="{% url 'Shop_App:product_detail' pk=product.pk %}"
+                                                   class="btn btn-success mt-2">View Details</a>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Carousel Controls -->
+                        <button class="carousel-control-prev" type="button" data-bs-target="#topSellingCarousel"
+                                data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon bg-dark p-3 rounded-circle"
+                                  aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#topSellingCarousel"
+                                data-bs-slide="next">
+                            <span class="carousel-control-next-icon bg-dark p-3 rounded-circle"
+                                  aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+
+
+    <br>
+
+
+    {#    <div class="row"> <!--all products show under this tag-->#}
+    {#        {% for product in object_list %}#}
+    {#                                        # here object_list is ListViews by default object list,why we did not pass object name in context dictionary##}
+    {#            <div class="col-md-6 col-sm-12 col-lg-3">#}
+    {#                                products showing number based on screen under this tag#}
+    {#                <figure class="card card-product">#}
+    {#                                            under this tag every single product is shown#}
+    {#                    <div class=" img-wrap ">#}
+    {#                        <img src="{{ product.mainimage.url }}" alt="picture" width="100%" height="300px">#}
+    {#                    </div>#}
+    {#                    <figcaption class="info-wrap"><!--to show information of a single product-->#}
+    {#                        <h6 class="title"><a#}
+    {#                                href="{% url 'Shop_App:product_detail' pk=product.pk %}">{{ product.name }}</a></h6>#}
+    {#                        <div class="action-wrap">#}
+    {#                            <div class="price-wrap5">#}
+    {#                                <span class="price-new">&#2547; {{ product.price|floatformat:2 }}</span>#}
+    {#                                <span class="price-old"><strike>&#2547; {{ product.old_price|floatformat:2 }}</strike></span>#}
+    {#                            </div>#}
+    {#                        </div>#}
+    {#                    </figcaption>#}
+    {#                </figure>#}
+    {#            </div>#}
+    {#        {% endfor %}#}
+    {##}
+    {#    </div>#}
+
+    <div class="container py-4">
+        <div class="row">
+            <!-- Product Section -->
+            <div class="col-md-8">
+                <div class="row gx-2 gy-3"> <!-- Spacing optimized -->
+                    <h1 style="text-align: center;background-color: cyan">our products</h1>
+                    {% for product in object_list %}
+                        <div class="col-lg-4 col-md-6 col-sm-6 col-6 mb-4">
+                            <div class="card product-card border-0 shadow-sm rounded overflow-hidden">
+                                <div class="img-wrap position-relative">
+                                    <img src="{{ product.mainimage.url }}" class="card-img-top" alt="Product Image">
+                                    <div class="overlay"></div>
+                                </div>
+                                <div class="card-body text-center">
+                                    <h6 class="card-title mb-2">
+                                        <a href="{% url 'Shop_App:product_detail' pk=product.pk %}"
+                                           class="text-dark text-decoration-none fw-bold">
+                                            {{ product.name }}
+                                        </a>
+                                    </h6>
+                                    <div class="price-wrap d-flex justify-content-center align-items-center">
+                                        <span class="price-new fw-bold text-success me-2 fs-5">&#2547; {{ product.price|floatformat:2 }}</span>
+                                        <span class="price-old text-muted fs-6"><strike>&#2547; {{ product.old_price|floatformat:2 }}</strike></span>
+                                    </div>
+                                    <button class="btn btn-primary mt-2 w-100">Add to Cart</button>
                                 </div>
                             </div>
-                        </figcaption>
-                    </figure>
+                        </div>
+                    {% endfor %}
                 </div>
-            {% endfor %}
+            </div>
+
+            <!---happy customer image and promotional viedeo section-->
+            <div class="col-md-4">
+                <!---happy customer image section-->
+                {% include 'promotion_app/happycustomer.html' %}
+
+                <!-- Video Section -->
+                {% include 'promotion_app/promotionalvideo.html' %}
+
+            </div>
+
+            <style>
+                .video-card {
+                    background: white;
+                    border-radius: 10px;
+                    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+                    transition: transform 0.3s ease-in-out;
+                }
+
+                .video-card:hover {
+                    transform: scale(1.02);
+                }
+
+                .video-frame iframe {
+                    border-radius: 10px;
+                }
+            </style>
+
         </div>
     </div>
+
+    <!-- Custom CSS -->
+    <style>
+
+
+        /* Product Card Design */
+        .product-card {
+            border-radius: 10px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            overflow: hidden;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Image Wrapper */
+        .img-wrap {
+            position: relative;
+            width: 100%;
+            height: 250px;
+            overflow: hidden;
+        }
+
+        .img-wrap img {
+            width: 100%;
+            height: 100%;
+            max-height: 250px; /* Fixes stretched images */
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .img-wrap:hover img {
+            transform: scale(1.05);
+        }
+
+        /* Price Styling */
+        .price-wrap .price-new {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #28a745;
+        }
+
+        .price-wrap .price-old {
+            font-size: 1rem;
+            text-decoration: line-through;
+            color: #6c757d;
+        }
+
+        /* Image Slider Fix */
+        .slider-img {
+            height: auto; /* Makes image responsive */
+            max-height: 400px; /* Prevents extra large images */
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        /* Custom Navigation Icons */
+        .custom-icon {
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            padding: 10px;
+        }
+
+        /* Mobile Responsive Fixes */
+        @media (max-width: 576px) {
+            .btn-primary {
+                font-size: 0.9rem;
+                padding: 8px;
+                white-space: nowrap;
+            }
+
+            .img-wrap {
+                height: 200px; /* Smaller height for smaller screens */
+            }
+        }
+    </style>
+
 
 {% endblock %}

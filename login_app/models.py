@@ -67,6 +67,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    profile_picture = models.ImageField(upload_to='profilePicture/', blank=True)
     """hwre we have created one to one model relationship with User & Profile"""
     username = models.CharField(max_length=264, blank=True)
     full_name = models.CharField(max_length=264, blank=True)

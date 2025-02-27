@@ -59,7 +59,7 @@ def user_profile(request):
 
     form = ProfileForm(instance=profile)
     if request.method == 'POST':
-        form = ProfileForm(request.POST, instance=profile)
+        form = ProfileForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
             form.save()
             messages.success(request, "change Saved")

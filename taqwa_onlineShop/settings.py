@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'fontawesomefree',
     'order_app',
     'payment_app',
+    'promotion_app',
+    'embed_video',
 
 ]
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"

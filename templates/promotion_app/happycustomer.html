@@ -1,0 +1,20 @@
+<!---happy customer image section-->
+<div id="productSlider" class="carousel slide " data-bs-ride="carousel">
+    <div class="carousel-inner">
+        <h1 style="text-align: center; background-color: cyan; padding: 10px;">Happy Customer</h1>
+        {% for product in object_list %}
+            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                <img src="{{ product.mainimage.url }}" class="d-block w-100 rounded shadow"
+                     alt="slider image">
+            </div>
+        {% endfor %}
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#productSlider"
+            data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#productSlider"
+            data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    </button>
+</div>
